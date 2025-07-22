@@ -42,6 +42,7 @@ import {
 	S_WHATSAPP_NET
 } from '../WABinary'
 import { WebSocketClient } from './Client'
+import { HttpsProxyAgent } from 'https-proxy-agent'
 
 /**
  * Connects to WA servers and performs:
@@ -62,7 +63,8 @@ export const makeSocket = (config: SocketConfig) => {
 		defaultQueryTimeoutMs,
 		transactionOpts,
 		qrTimeout,
-		makeSignalRepository
+		makeSignalRepository,
+		proxyUrl
 	} = config
 
 	if (printQRInTerminal) {
@@ -79,6 +81,14 @@ export const makeSocket = (config: SocketConfig) => {
 
 	if (url.protocol === 'wss' && authState?.creds?.routingInfo) {
 		url.searchParams.append('ED', authState.creds.routingInfo.toString('base64url'))
+	}
+
+	let agent = null;
+	if (proxyUrl) {
+		agent = new HttpsProxyAgent(proxyUrl);
+	}
+	else if (config.agent) {
+		agent = config.agent;
 	}
 
 	const ws = new WebSocketClient(url, config)

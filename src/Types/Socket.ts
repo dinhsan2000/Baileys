@@ -96,6 +96,12 @@ export type SocketConfig = {
 	generateHighQualityLinkPreview: boolean
 
 	/**
+	 * Proxy URL to use for the connection.
+	 * This is used to connect to the WhatsApp Web socket through a proxy server.
+	 */
+	proxyUrl?: string
+
+	/**
 	 * Returns if a jid should be ignored,
 	 * no event for that jid will be triggered.
 	 * Messages from that jid will also not be decrypted
